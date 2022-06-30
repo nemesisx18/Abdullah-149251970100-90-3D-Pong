@@ -1,22 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PaddleController : MonoBehaviour
 {
     public GoalController goal;
+    public GameplayController gameplay;
 
     public int speed;
     public int score;
+    public int scoreLose;
+    public int playerNumber;
+
+    public TextMeshProUGUI scoreTExt;
 
     public KeyCode leftKey;
     public KeyCode rightKey;
     public KeyCode fwdKey;
     public KeyCode bckKey;
 
-    public Rigidbody rig;
+    private Rigidbody rig;
 
     public bool isLost;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,12 +34,17 @@ public class PaddleController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        scoreTExt.text = score.ToString();
+
         MovePaddle(GetInput());
-        if (score == 1)
+        if (score >= scoreLose)
         {
             isLost = true;
             goal.GetComponent<CapsuleCollider>().isTrigger = false;
             this.gameObject.SetActive(false);
+
+            gameplay.playerLose += 1;
+            gameplay.CheckWin();
         }
     }
 
